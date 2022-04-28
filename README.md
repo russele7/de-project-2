@@ -50,10 +50,28 @@ where (count_all = count_distinct) != true
 select * from production.[таблица] 
 where (column1 is null) or ... or (columnN is null) 
 ```
-
+#### 1.3.2.3 Некорректные типы данных
+Типы данных просмотрены в DBEAVER через опцию VIEW DATA. Ошибок не обнаружено
+#### 1.3.2.4 Неверные форматы записей
+Форматы просмотрены в DBEAVER через опцию VIEW DATA. Ошибок не обнаружено
 
 ### 1.3.3 Укажите, какие инструменты для обеспечения качества данных использованы в таблицах в схеме production.
-
+Инструменты для обеспечения качества данных в таблицах в схеме production  - это ограничения при создании таблиц.
+orders:
+```CREATE TABLE production.orders (
+ order_id int4 NOT NULL,
+ order_ts timestamp NOT NULL,
+ user_id int4 NOT NULL,
+ bonus_payment numeric(19, 5) NOT NULL DEFAULT 0,
+ payment numeric(19, 5) NOT NULL DEFAULT 0,
+ "cost" numeric(19, 5) NOT NULL DEFAULT 0,
+ bonus_grant numeric(19, 5) NOT NULL DEFAULT 0,
+ status int4 NOT NULL,
+ CONSTRAINT orders_check CHECK ((cost = (payment + bonus_payment))),
+ CONSTRAINT orders_pkey PRIMARY KEY (order_id)
+);
+```
+Аналогично можно посмотреть для каждой витрины
 ## 1.4. Подготовьте витрину данных
 ### 1.4.1 Сделайте представление для таблиц из базы production.
 ### 1.4.2 Напишите DDL-запрос для создания витрины
