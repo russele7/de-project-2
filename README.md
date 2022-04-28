@@ -16,10 +16,42 @@
 - Успешно выполненный заказ - заказ со статусом Closed.
 ## 1.2. Изучите структуру исходных данных
 ### 1.2.1 Подключитесь к базе данных и изучите структуру таблиц.
+Изучено
 ### 1.2.2 Создайте текстовой документ, в котором будете описывать решение. В этом же документе зафиксируйте, какие поля вы будете использовать для расчёта витрины.
+- users: id
+- orders: order_ts, payment, status
+- orderstatuses: id, key
 ## 1.3. Проанализируйте качество данных
 ### 1.3.1 Изучите качество входных данных.
+Изучено
 ### 1.3.2 В итоговом документе опишите, насколько качественные данные хранятся в источнике.
+#### 1.3.2.1 Дубли в данных
+Во всех 6 таблицах дубли отсутствуют. Проверочный скрипт:  
+'''
+with cte1 as(
+  select count(*) as count_all, count (distinct id) as count_distinct from production.users u 
+  union
+  select count(*), count (distinct order_id) from production.orders o4 
+  union
+  select count(*), count (distinct id) from production.products p 
+  union
+  select count(*), count (distinct id) from production.orderstatuses o 
+  union
+  select count(*), count (distinct id) from production.orderstatuslog o2 
+  union
+  select count(*), count (distinct id) from production.orderitems o3 )
+select *, count_all = count_distinct as flg from cte1
+where (count_all = count_distinct) != true 
+'''
+#### 1.3.2.2 Пропущенные значения в важных полях
+пропуски отсутствуют.  
+Проверочный скрипт для каждой таблицы:
+'''
+select * from production.[таблица] 
+where (column1 is null) or ... or (columnN is null) 
+'''
+
+
 ### 1.3.3 Укажите, какие инструменты для обеспечения качества данных использованы в таблицах в схеме production.
 
 ## 1.4. Подготовьте витрину данных
